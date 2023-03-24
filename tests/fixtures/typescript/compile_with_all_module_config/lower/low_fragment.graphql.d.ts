@@ -1,4 +1,5 @@
-import type { OperatingSystem } from "~/gen-me/global-types";
+import type { FragmentDocumentNode } from "@web/typed_node";
+import type { OperatingSystem } from "@web/graphql_globals";
 
 export type LowerCheck_personalHost = {
   readonly operatingSystem: OperatingSystem;
@@ -11,3 +12,6 @@ export type LowerCheck = {
    */
   readonly personalHost: LowerCheck_personalHost;
 };
+
+declare const graphqlDocument: FragmentDocumentNode<LowerCheck>;
+export default graphqlDocument;

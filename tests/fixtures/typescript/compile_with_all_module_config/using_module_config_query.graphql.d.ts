@@ -1,4 +1,5 @@
-import type { OperatingSystem } from "~/gen-me/global-types";
+import type { QueryDocumentNode } from "@web/typed_node";
+import type { OperatingSystem } from "@web/graphql_globals";
 
 export type UsingModuleConfig_operator_personalHost = {
   readonly id: string;
@@ -17,3 +18,6 @@ export type UsingModuleConfig_operator = {
 export type UsingModuleConfig = {
   readonly operator: UsingModuleConfig_operator | null;
 };
+
+declare const graphqlDocument: QueryDocumentNode<UsingModuleConfig, never>;
+export default graphqlDocument;

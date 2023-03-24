@@ -1,4 +1,5 @@
-import type { OperatingSystem } from "__generated__/globalTypes";
+import type { QueryDocumentNode } from "@notarize/qlc-cli/typed-documentnode";
+import type { OperatingSystem } from "graphql-global-types";
 
 export type WithGlobals_operator_personalHost = {
   readonly id: string;
@@ -15,3 +16,6 @@ export type WithGlobals_operator = {
 export type WithGlobals = {
   readonly operator: WithGlobals_operator | null;
 };
+
+declare const graphqlDocument: QueryDocumentNode<WithGlobals, never>;
+export default graphqlDocument;

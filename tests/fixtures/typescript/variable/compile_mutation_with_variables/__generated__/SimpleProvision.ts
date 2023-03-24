@@ -1,4 +1,4 @@
-import type { ProvisionHostInput } from "__generated__/globalTypes";
+import type { ProvisionHostInput } from "graphql-global-types";
 
 export type SimpleProvision_provisionHost_host = {
   readonly id: string;

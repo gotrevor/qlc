@@ -1,3 +1,5 @@
+import type { QueryDocumentNode } from "@notarize/qlc-cli/typed-documentnode";
+
 export type GetTagTypeNamesForHost_host_tags_BooleanTag = {
   readonly __typename: "BooleanTag";
   readonly as: "BooleanTag";
@@ -25,3 +27,6 @@ export type GetTagTypeNamesForHost_host = {
 export type GetTagTypeNamesForHost = {
   readonly host: GetTagTypeNamesForHost_host | null;
 };
+
+declare const graphqlDocument: QueryDocumentNode<GetTagTypeNamesForHost, never>;
+export default graphqlDocument;

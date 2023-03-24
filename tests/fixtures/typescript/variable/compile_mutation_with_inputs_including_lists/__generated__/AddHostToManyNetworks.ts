@@ -1,4 +1,4 @@
-import type { AttachHostToNetworksInput } from "__generated__/globalTypes";
+import type { AttachHostToNetworksInput } from "graphql-global-types";
 
 export type AddHostToManyNetworks_attachHostToNetworks_host_networks = {
   readonly id: string;
