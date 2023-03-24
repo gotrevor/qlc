@@ -1,4 +1,4 @@
-import type { OperatingSystem } from "__generated__/globalTypes";
+import type { OperatingSystem } from "graphql-global-types";
 
 export type RelativeFragmentUser_personalHost = {
   readonly osFromAbsolute: OperatingSystem;
