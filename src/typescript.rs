@@ -535,29 +535,24 @@ fn compile_variables_type_definition(
 
 fn compile_imports(
     config: &CompileConfig,
-    typed_documentnode_name: &Option<&str>,
+    typed_documentnode_name: &str,
     used_globals: &HashSet<String>,
 ) -> Typescript {
-    let mut sorted_names: Vec<&str> = used_globals.iter().map(|g| g.as_ref()).collect();
-    // For test and file signature stability
-    sorted_names.sort_unstable();
-    match (typed_documentnode_name, sorted_names.len()) {
-        (Some(name), 0) => format!(
-            "import type {{ {name} }} from \"{}\";\n\n",
+    if used_globals.is_empty() {
+        format!(
+            "import type {{ {typed_documentnode_name} }} from \"{}\";\n\n",
             config.typed_graphql_documentnode_module_name
-        ),
-        (Some(name), _) => format!(
-            "import type {{ {name} }} from \"{}\";\nimport type {{ {} }} from \"{}\";\n\n",
+        )
+    } else {
+        let mut sorted_names: Vec<&str> = used_globals.iter().map(|g| g.as_ref()).collect();
+        // For test and file signature stability
+        sorted_names.sort_unstable();
+        format!(
+            "import type {{ {typed_documentnode_name} }} from \"{}\";\nimport type {{ {} }} from \"{}\";\n\n",
             config.typed_graphql_documentnode_module_name,
             sorted_names.join(", "),
             config.global_types_module_name,
-        ),
-        (None, 0) => EMPTY.to_string(),
-        (None, _) => format!(
-            "import type {{ {} }} from \"{}\";\n\n",
-            sorted_names.join(", "),
-            config.global_types_module_name,
-        ),
+        )
     }
 }
 
@@ -576,29 +571,24 @@ pub fn compile_ir(
     let variable_type_def =
         compile_variables_type_definition(config, schema, &mut global_types_used, op_ir)?;
     let typed_documentnode_name = match op_ir.kind {
-        ir::OperationKind::Mutation => Some("MutationDocumentNode"),
-        ir::OperationKind::Subscription | ir::OperationKind::Query => Some("QueryDocumentNode"),
-        ir::OperationKind::Fragment => None,
+        ir::OperationKind::Mutation => "MutationDocumentNode",
+        ir::OperationKind::Subscription
+        | ir::OperationKind::Query
+        | ir::OperationKind::Fragment => "QueryDocumentNode",
     };
-    let imports = compile_imports(config, &typed_documentnode_name, &global_types_used);
+    let imports = compile_imports(config, typed_documentnode_name, &global_types_used);
     let variables = match &variable_type_def {
         Some(def) => &def.contents,
         None => EMPTY,
     };
-    let default_export = match typed_documentnode_name {
-        None => EMPTY.to_string(),
-        Some(documentnode_name) => {
-            let data_name = &op_ir.name;
-            let var_name = variable_type_def
-                .as_ref()
-                .map(|def| def.name.as_str())
-                .unwrap_or("never");
-            format!("\n\ndeclare const graphqlDocument: {documentnode_name}<{data_name}, {var_name}>;\nexport default graphqlDocument;")
-        }
-    };
+    let data_name = &op_ir.name;
+    let var_name = variable_type_def
+        .as_ref()
+        .map(|def| def.name.as_str())
+        .unwrap_or("never");
     Ok(Compile {
         contents: format!(
-            "{HEADER}{imports}{}{variables}{default_export}",
+            "{HEADER}{imports}{}{variables}\n\ndeclare const graphqlDocument: {typed_documentnode_name}<{data_name}, {var_name}>;\nexport default graphqlDocument;",
             type_definitions.join("\n\n")
         ),
         global_types_used,

@@ -6,13 +6,19 @@ type BasicObject = Record<string, unknown>;
 export type QueryDocumentNode<
   Data extends BasicObject,
   Variables extends BasicObject
-> = DocumentNode & { __typedDocumentNodeQuery: never };
+> = DocumentNode & {
+  /** @private */
+  readonly __typedDocumentNodeQuery?: (d: Data) => Variables;
+};
 
 /** Type of a Mutation GraphQL document */
 export type MutationDocumentNode<
   Data extends BasicObject,
   Variables extends BasicObject
-> = DocumentNode & { __typedDocumentNodeMutation: never };
+> = DocumentNode & {
+  /** @private */
+  readonly __typedDocumentNodeMutation?: (d: Data) => Variables;
+};
 
 /**
  * Helper for extracting a data type from a typed DocumentNode
