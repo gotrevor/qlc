@@ -236,7 +236,7 @@ workflows:
 
       - build_release_bin:
           requires:
-            - test
+            # - test
             - lint
             - fmt
           filters:

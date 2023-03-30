@@ -522,7 +522,7 @@ dependencies = [
 
 [[package]]
 name = "qlc"
-version = "3.1.0"
+version = "4.0.0-alpha2"
 dependencies = [
  "assert_cmd",
  "assert_fs",
